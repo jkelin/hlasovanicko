@@ -3,6 +3,8 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
 import { getDataFromTree } from '@apollo/react-ssr'
 
+import './global.css'
+
 const App = ({ Component, pageProps, apollo }) => (
   <ApolloProvider client={apollo}>
     <Component {...pageProps} />

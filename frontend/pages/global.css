@@ -1,0 +1,7 @@
+/* purgecss start ignore */
+@tailwind base;
+
+/* add base styles here */
+@tailwind components;
+/* purgecss end ignore */
+@tailwind utilities;

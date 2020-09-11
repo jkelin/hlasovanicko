@@ -1,20 +1,13 @@
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
-// import { getDataFromTree } from '@apollo/react-ssr';
-
-const QUERY = gql`
-  {
-    test
-  }
-`
-
+import { useTestQuery } from '../data/types'
 const Index = () => {
-  const { loading, data } = useQuery(QUERY)
+  const { loading, data } = useTestQuery()
 
   if (loading || !data) {
     return <h1>loading...</h1>
   }
-  return <h1>{data.test}</h1>
+
+  return <h1 className="text-red-500">{data.test}</h1>
 }
 
 export default Index
