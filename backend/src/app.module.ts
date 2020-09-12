@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-import { AuthorsResolver } from './root.resolver';
+import { VoteResolver } from './votes/vote.resolver';
+import { VotesService } from './votes/votes.service';
 
 @Module({
   imports: [
@@ -15,7 +14,6 @@ import { AuthorsResolver } from './root.resolver';
       autoSchemaFile: true,
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService, AuthorsResolver],
+  providers: [VotesService, VoteResolver],
 })
 export class AppModule {}

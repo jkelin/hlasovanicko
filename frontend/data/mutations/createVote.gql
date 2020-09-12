@@ -1,0 +1,6 @@
+mutation CreateVote($title: String!) {
+  createVote(title: $title) {
+    id
+    title
+  }
+}
