@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config/dist/config.module';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
-import { VoteResolver } from './votes/vote.resolver';
-import { VotesService } from './votes/votes.service';
+import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
+import { Poll } from './polls/poll.entity';
+import { PollResolver } from './polls/poll.resolver';
+import { PollsService } from './polls/polls.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     GraphQLModule.forRoot({
       // typePaths: [join(__dirname, '../../shared/schema/**/*.gql')],
       // definitions: {
@@ -13,7 +16,15 @@ import { VotesService } from './votes/votes.service';
       // },
       autoSchemaFile: true,
     }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.PG_URI,
+      entities: [Poll],
+      synchronize: true,
+      logging: 'all',
+    }),
+    TypeOrmModule.forFeature([Poll]),
   ],
-  providers: [VotesService, VoteResolver],
+  providers: [PollsService, PollResolver],
 })
 export class AppModule {}

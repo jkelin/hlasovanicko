@@ -1,6 +1,0 @@
-query VoteById($id: ID!) {
-  vote(id: $id) {
-    id
-    title
-  }
-}

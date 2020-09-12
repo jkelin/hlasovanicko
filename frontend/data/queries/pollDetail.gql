@@ -1,0 +1,9 @@
+query PollDetail($slug: ID!) {
+  poll: pollBySlug(slug: $slug) {
+    id
+    slug
+    isNew
+    isActive
+    title
+  }
+}

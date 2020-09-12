@@ -1,0 +1,6 @@
+mutation UpdatePollTitle($id: ID!, $title: String!) {
+  updatePoll(id: $id, title: $title) {
+    id
+    title
+  }
+}

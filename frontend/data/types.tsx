@@ -12,123 +12,184 @@ export type Scalars = {
   Float: number;
 };
 
-export type Vote = {
-  __typename?: 'Vote';
+export type Poll = {
+  __typename?: 'Poll';
   id: Scalars['String'];
-  title: Scalars['String'];
+  slug: Scalars['String'];
+  isNew: Scalars['Boolean'];
+  isActive: Scalars['Boolean'];
+  title?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  vote: Vote;
+  poll: Poll;
+  pollBySlug: Poll;
 };
 
 
-export type QueryVoteArgs = {
+export type QueryPollArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryPollBySlugArgs = {
+  slug: Scalars['ID'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createVote: Vote;
+  createPoll: Poll;
+  updatePoll: Poll;
 };
 
 
-export type MutationCreateVoteArgs = {
-  title: Scalars['String'];
-};
-
-export type CreateVoteMutationVariables = Exact<{
-  title: Scalars['String'];
-}>;
-
-
-export type CreateVoteMutation = (
-  { __typename?: 'Mutation' }
-  & { createVote: (
-    { __typename?: 'Vote' }
-    & Pick<Vote, 'id' | 'title'>
-  ) }
-);
-
-export type VoteByIdQueryVariables = Exact<{
+export type MutationUpdatePollArgs = {
+  title?: Maybe<Scalars['String']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
+};
+
+export type CreatePollMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreatePollMutation = (
+  { __typename?: 'Mutation' }
+  & { createPoll: (
+    { __typename?: 'Poll' }
+    & Pick<Poll, 'id' | 'slug' | 'isNew'>
+  ) }
+);
+
+export type UpdatePollTitleMutationVariables = Exact<{
+  id: Scalars['ID'];
+  title: Scalars['String'];
 }>;
 
 
-export type VoteByIdQuery = (
+export type UpdatePollTitleMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePoll: (
+    { __typename?: 'Poll' }
+    & Pick<Poll, 'id' | 'title'>
+  ) }
+);
+
+export type PollDetailQueryVariables = Exact<{
+  slug: Scalars['ID'];
+}>;
+
+
+export type PollDetailQuery = (
   { __typename?: 'Query' }
-  & { vote: (
-    { __typename?: 'Vote' }
-    & Pick<Vote, 'id' | 'title'>
+  & { poll: (
+    { __typename?: 'Poll' }
+    & Pick<Poll, 'id' | 'slug' | 'isNew' | 'isActive' | 'title'>
   ) }
 );
 
 
-export const CreateVoteDocument = gql`
-    mutation CreateVote($title: String!) {
-  createVote(title: $title) {
+export const CreatePollDocument = gql`
+    mutation CreatePoll {
+  createPoll {
     id
-    title
+    slug
+    isNew
   }
 }
     `;
-export type CreateVoteMutationFn = ApolloReactCommon.MutationFunction<CreateVoteMutation, CreateVoteMutationVariables>;
+export type CreatePollMutationFn = ApolloReactCommon.MutationFunction<CreatePollMutation, CreatePollMutationVariables>;
 
 /**
- * __useCreateVoteMutation__
+ * __useCreatePollMutation__
  *
- * To run a mutation, you first call `useCreateVoteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateVoteMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreatePollMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePollMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createVoteMutation, { data, loading, error }] = useCreateVoteMutation({
+ * const [createPollMutation, { data, loading, error }] = useCreatePollMutation({
  *   variables: {
+ *   },
+ * });
+ */
+export function useCreatePollMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePollMutation, CreatePollMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreatePollMutation, CreatePollMutationVariables>(CreatePollDocument, baseOptions);
+      }
+export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
+export type CreatePollMutationResult = ApolloReactCommon.MutationResult<CreatePollMutation>;
+export type CreatePollMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
+export const UpdatePollTitleDocument = gql`
+    mutation UpdatePollTitle($id: ID!, $title: String!) {
+  updatePoll(id: $id, title: $title) {
+    id
+    title
+  }
+}
+    `;
+export type UpdatePollTitleMutationFn = ApolloReactCommon.MutationFunction<UpdatePollTitleMutation, UpdatePollTitleMutationVariables>;
+
+/**
+ * __useUpdatePollTitleMutation__
+ *
+ * To run a mutation, you first call `useUpdatePollTitleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePollTitleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePollTitleMutation, { data, loading, error }] = useUpdatePollTitleMutation({
+ *   variables: {
+ *      id: // value for 'id'
  *      title: // value for 'title'
  *   },
  * });
  */
-export function useCreateVoteMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateVoteMutation, CreateVoteMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateVoteMutation, CreateVoteMutationVariables>(CreateVoteDocument, baseOptions);
+export function useUpdatePollTitleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePollTitleMutation, UpdatePollTitleMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdatePollTitleMutation, UpdatePollTitleMutationVariables>(UpdatePollTitleDocument, baseOptions);
       }
-export type CreateVoteMutationHookResult = ReturnType<typeof useCreateVoteMutation>;
-export type CreateVoteMutationResult = ApolloReactCommon.MutationResult<CreateVoteMutation>;
-export type CreateVoteMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateVoteMutation, CreateVoteMutationVariables>;
-export const VoteByIdDocument = gql`
-    query VoteById($id: ID!) {
-  vote(id: $id) {
+export type UpdatePollTitleMutationHookResult = ReturnType<typeof useUpdatePollTitleMutation>;
+export type UpdatePollTitleMutationResult = ApolloReactCommon.MutationResult<UpdatePollTitleMutation>;
+export type UpdatePollTitleMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePollTitleMutation, UpdatePollTitleMutationVariables>;
+export const PollDetailDocument = gql`
+    query PollDetail($slug: ID!) {
+  poll: pollBySlug(slug: $slug) {
     id
+    slug
+    isNew
+    isActive
     title
   }
 }
     `;
 
 /**
- * __useVoteByIdQuery__
+ * __usePollDetailQuery__
  *
- * To run a query within a React component, call `useVoteByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useVoteByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePollDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePollDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useVoteByIdQuery({
+ * const { data, loading, error } = usePollDetailQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useVoteByIdQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<VoteByIdQuery, VoteByIdQueryVariables>) {
-        return ApolloReactHooks.useQuery<VoteByIdQuery, VoteByIdQueryVariables>(VoteByIdDocument, baseOptions);
+export function usePollDetailQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PollDetailQuery, PollDetailQueryVariables>) {
+        return ApolloReactHooks.useQuery<PollDetailQuery, PollDetailQueryVariables>(PollDetailDocument, baseOptions);
       }
-export function useVoteByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<VoteByIdQuery, VoteByIdQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<VoteByIdQuery, VoteByIdQueryVariables>(VoteByIdDocument, baseOptions);
+export function usePollDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PollDetailQuery, PollDetailQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<PollDetailQuery, PollDetailQueryVariables>(PollDetailDocument, baseOptions);
         }
-export type VoteByIdQueryHookResult = ReturnType<typeof useVoteByIdQuery>;
-export type VoteByIdLazyQueryHookResult = ReturnType<typeof useVoteByIdLazyQuery>;
-export type VoteByIdQueryResult = ApolloReactCommon.QueryResult<VoteByIdQuery, VoteByIdQueryVariables>;
+export type PollDetailQueryHookResult = ReturnType<typeof usePollDetailQuery>;
+export type PollDetailLazyQueryHookResult = ReturnType<typeof usePollDetailLazyQuery>;
+export type PollDetailQueryResult = ApolloReactCommon.QueryResult<PollDetailQuery, PollDetailQueryVariables>;

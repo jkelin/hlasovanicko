@@ -1,0 +1,7 @@
+mutation CreatePoll {
+  createPoll {
+    id
+    slug
+    isNew
+  }
+}
