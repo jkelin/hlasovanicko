@@ -2,6 +2,7 @@ import withApollo from 'next-with-apollo'
 import { ApolloProvider } from '@apollo/react-hooks'
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
 import { getDataFromTree } from '@apollo/react-ssr'
+import getConfig from 'next/config'
 
 import './global.css'
 
@@ -14,9 +15,7 @@ const App = ({ Component, pageProps, apollo }) => (
 export default withApollo(
   ({ initialState }) => {
     return new ApolloClient({
-      uri: process.env.BACKEND_URI
-        ? process.env.BACKEND_URI + '/graphql'
-        : '/api/graphql',
+      uri: getConfig().publicRuntimeConfig.BACKEND_URI + '/graphql',
       cache: new InMemoryCache().restore(initialState || {}),
     })
   },

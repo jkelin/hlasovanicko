@@ -1,13 +1,11 @@
-import gql from 'graphql-tag'
-import { useTestQuery } from '../data/types'
-const Index = () => {
-  const { loading, data } = useTestQuery()
+import { NextPage } from 'next'
+import React from 'react'
+import { Layout } from 'containers'
 
-  if (loading || !data) {
-    return <h1>loading...</h1>
-  }
+interface IndexPageProps {}
 
-  return <h1 className="text-red-500">{data.test}</h1>
+const IndexPage: NextPage<IndexPageProps> = (props) => {
+  return <Layout title="Hlasováníčko">Hello world!</Layout>
 }
 
-export default Index
+export default IndexPage
