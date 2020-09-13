@@ -22,7 +22,7 @@ module.exports = withPlugins(
     publicRuntimeConfig: {
       BACKEND_URI: process.env.BACKEND_URI,
     },
-    webpack: (config, { isServer }) => {
+    webpack(config, { isServer }) {
       config.module.rules.push({
         test: /\.svg$/,
         use: [

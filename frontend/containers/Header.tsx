@@ -15,20 +15,20 @@ export const Header: React.FC = () => {
       update: (store, result) => {
         store.writeQuery({
           query: PollDetailDocument,
-          variables: { slug: result.data!.createPoll.slug },
-          data: { poll: result.data!.createPoll },
+          variables: { slug: result.data!.poll.slug },
+          data: { poll: result.data!.poll },
         })
       },
     })
 
-    router.push('/p/[poll]', `/p/${poll.data?.createPoll.slug}`)
+    router.push('/p/[poll]', `/p/${poll.data?.poll.slug}`)
   }, [])
 
   return (
     <>
       <header className={classNames('border-b bg-white-100 border-grey-300')}>
         <nav className="flex items-center container mx-auto">
-          <Link to="/" className="lg:mr-36 px-12">
+          <Link to="/" className="lg:mr-36 pr-12">
             Hlasováníčko
           </Link>
 

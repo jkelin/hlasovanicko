@@ -1,0 +1,11 @@
+mutation CreateOption($pollId: ID!) {
+  option: createPollOption(pollId: $pollId) {
+    id
+    poll {
+      id
+      options {
+        id
+      }
+    }
+  }
+}

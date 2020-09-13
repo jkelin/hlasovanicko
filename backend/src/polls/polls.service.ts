@@ -2,14 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { Poll } from './poll.entity';
 import { v4 } from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import humanId from 'human-id';
+import { PollOption } from 'src/pollOptions/pollOption.entity';
 
 @Injectable()
 export class PollsService {
   constructor(
     @InjectRepository(Poll)
     private pollRepository: Repository<Poll>,
+    @InjectRepository(PollOption)
+    private optionRepository: Repository<PollOption>,
+    private connection: Connection,
   ) {}
 
   async create() {
@@ -29,26 +33,28 @@ export class PollsService {
     return await this.pollRepository.find();
   }
 
-  async findById(id: string) {
-    return await this.pollRepository.findOne({ where: { id } });
+  async findById(pollId: string) {
+    return await this.pollRepository.findOne({ where: { id: pollId } });
   }
 
-  async findBySlug(slug: string) {
-    return await this.pollRepository.findOne({ where: { slug } });
+  async findBySlug(pollSlug: string) {
+    return await this.pollRepository.findOne({ where: { slug: pollSlug } });
   }
 
-  async update(id: string, update: Partial<Poll>) {
-    const poll = await this.pollRepository.findOne({ where: { id } });
+  async update(pollId: string, update: Partial<Poll>) {
+    const poll = await this.pollRepository.findOne({ where: { id: pollId } });
 
     if (!poll) {
       return new Error('Poll not found');
     }
 
-    if (typeof update.title !== undefined) {
-      poll.title = update.title;
-    }
+    await this.connection.transaction(async (manager) => {
+      if (typeof update.title !== undefined) {
+        poll.title = update.title;
+      }
 
-    await this.pollRepository.save(poll);
+      await manager.save(poll);
+    });
 
     return poll;
   }

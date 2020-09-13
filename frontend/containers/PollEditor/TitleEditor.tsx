@@ -1,4 +1,4 @@
-import { Button, Clickable } from 'components'
+import { Button, Clickable, Input } from 'components'
 import {
   PollDetailDocument,
   PollDetailQuery,
@@ -17,9 +17,7 @@ interface TitleEditorProps {
 }
 
 export const TitleEditor: React.FC<TitleEditorProps> = (props) => {
-  const [isEditing, setIsEditing] = useState(false)
   const [updatePollTitle] = useUpdatePollTitleMutation()
-  console.warn(props.poll.title)
   const { register, handleSubmit, formState, setValue, reset } = useForm<
     PollTitleForm
   >({
@@ -31,43 +29,47 @@ export const TitleEditor: React.FC<TitleEditorProps> = (props) => {
 
   const save = useAsyncCallback(
     async (data: PollTitleForm) => {
-      setIsEditing(false)
-
       updatePollTitle({
         variables: {
           id: props.poll.id,
           title: data.title,
         },
         optimisticResponse: {
-          updatePoll: {
+          poll: {
             id: props.poll.id,
             __typename: props.poll.__typename,
             title: data.title,
           },
         },
-        update: (store, resp) => reset(resp.data.updatePoll),
+        update: (store, resp) => reset(resp.data.poll),
       })
     },
-    [props.poll, updatePollTitle, setIsEditing]
+    [props.poll, updatePollTitle]
   )
 
   return (
     <div>
-      {!isEditing && (
-        <h1>
-          <Clickable className="underline" onClick={() => setIsEditing(true)}>
-            {props.poll.title || 'Titulek'}
-          </Clickable>
-        </h1>
-      )}
-      {isEditing && (
-        <form onSubmit={handleSubmit(save)}>
-          <input type="text" name="title" ref={register} autoFocus={true} />
-          <Button isFormSubmit={true} loading={formState.isSubmitting}>
+      <form onSubmit={handleSubmit(save)} className="flex">
+        <Input
+          label="Název hlasování"
+          type="text"
+          name="title"
+          autoComplete="no off"
+          className="flex-grow"
+          ref={register()}
+          autoFocus={true}
+        />
+        {(formState.isDirty || formState.isSubmitting) && (
+          <Button
+            className="border self-end ml-8"
+            style={{ height: 42 }}
+            isFormSubmit={true}
+            loading={formState.isSubmitting}
+          >
             Uložit
           </Button>
-        </form>
-      )}
+        )}
+      </form>
     </div>
   )
 }

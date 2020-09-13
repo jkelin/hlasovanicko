@@ -1,14 +1,6 @@
 import { ArgsType, Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
-
-@ArgsType()
-export class UpdatePollArgs {
-  @Field({ nullable: true })
-  title?: string;
-
-  @Field({ nullable: true })
-  isActive?: boolean;
-}
+import { PollOption } from 'src/pollOptions/pollOption.entity';
+import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
@@ -33,4 +25,8 @@ export class Poll {
   @Column({ nullable: true })
   @Field({ nullable: true })
   title?: string;
+
+  @OneToMany((type) => PollOption, (option) => option.poll)
+  @Field(() => [PollOption])
+  options?: PollOption[];
 }

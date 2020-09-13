@@ -5,5 +5,11 @@ query PollDetail($slug: ID!) {
     isNew
     isActive
     title
+
+    options {
+      id
+      title
+      order
+    }
   }
 }

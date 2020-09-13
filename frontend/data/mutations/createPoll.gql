@@ -1,5 +1,5 @@
 mutation CreatePoll {
-  createPoll {
+  poll: createPoll {
     id
     slug
     isNew

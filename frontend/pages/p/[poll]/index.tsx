@@ -11,7 +11,15 @@ const VotePage: NextPage<VotePageProps> = (props) => {
   const router = useRouter()
   const pollId: string = router.query.poll as any
 
-  const { data } = usePollDetailQuery({ variables: { slug: pollId } })
+  const { data } = usePollDetailQuery({
+    variables: { slug: pollId },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+    ssr: false,
+  })
+
+  console.warn('vote page', data?.poll?.options)
 
   return (
     <Layout

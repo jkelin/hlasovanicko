@@ -33,7 +33,7 @@ export const Layout: React.FunctionComponent<LayoutProps> = ({
     <main
       className={classNames(
         background === 'grey' && 'bg-grey-100',
-        'overflow-y-scroll'
+        'container m-auto'
       )}
     >
       {children}

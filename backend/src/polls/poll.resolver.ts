@@ -10,12 +10,26 @@ import {
   Field,
   ID,
 } from '@nestjs/graphql';
-import { Poll, UpdatePollArgs } from './poll.entity';
+import { PollOptionsService } from 'src/pollOptions/pollOptions.service';
+import { Poll } from './poll.entity';
 import { PollsService } from './polls.service';
+import { UpdatePollArgs } from './args.entity';
 
-@Resolver()
+@Resolver(() => Poll)
 export class PollResolver {
-  constructor(private pollService: PollsService) {}
+  constructor(
+    private pollService: PollsService,
+    private pollOptionsService: PollOptionsService,
+  ) {}
+
+  @ResolveField(() => Poll)
+  async options(@Parent() parent: Poll) {
+    return (
+      parent.options ||
+      (await this.pollOptionsService.findForPoll(parent.id)) ||
+      []
+    );
+  }
 
   @Query((returns) => Poll)
   async poll(@Args({ name: 'id', type: () => ID }) id: string) {

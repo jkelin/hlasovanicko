@@ -1,0 +1,6 @@
+mutation UpdatePollOptionTitle($id: ID!, $title: String!) {
+  option: updatePollOption(id: $id, title: $title) {
+    id
+    title
+  }
+}
