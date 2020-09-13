@@ -27,7 +27,7 @@ export type PollOption = {
   id: Scalars['String'];
   title: Scalars['String'];
   poll: Poll;
-  order: Scalars['Int'];
+  index: Scalars['Int'];
 };
 
 export type Query = {
@@ -53,6 +53,7 @@ export type Mutation = {
   updatePollOption: PollOption;
   createPoll: Poll;
   updatePoll: Poll;
+  updatePollOptionOrders: Poll;
 };
 
 
@@ -68,6 +69,7 @@ export type MutationDeletePollOptionArgs = {
 
 export type MutationUpdatePollOptionArgs = {
   title?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
 };
 
@@ -75,6 +77,12 @@ export type MutationUpdatePollOptionArgs = {
 export type MutationUpdatePollArgs = {
   title?: Maybe<Scalars['String']>;
   isActive?: Maybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+};
+
+
+export type MutationUpdatePollOptionOrdersArgs = {
+  options: Array<Scalars['ID']>;
   id: Scalars['ID'];
 };
 
@@ -87,7 +95,7 @@ export type CreateOptionMutation = (
   { __typename?: 'Mutation' }
   & { option: (
     { __typename?: 'PollOption' }
-    & Pick<PollOption, 'id'>
+    & Pick<PollOption, 'id' | 'index'>
     & { poll: (
       { __typename?: 'Poll' }
       & Pick<Poll, 'id'>
@@ -107,6 +115,24 @@ export type CreatePollMutation = (
   & { poll: (
     { __typename?: 'Poll' }
     & Pick<Poll, 'id' | 'slug' | 'isNew'>
+  ) }
+);
+
+export type UpdatePollOptionOrdersMutationVariables = Exact<{
+  id: Scalars['ID'];
+  options: Array<Scalars['ID']>;
+}>;
+
+
+export type UpdatePollOptionOrdersMutation = (
+  { __typename?: 'Mutation' }
+  & { poll: (
+    { __typename?: 'Poll' }
+    & Pick<Poll, 'id'>
+    & { options: Array<(
+      { __typename?: 'PollOption' }
+      & Pick<PollOption, 'id' | 'index'>
+    )> }
   ) }
 );
 
@@ -150,7 +176,7 @@ export type PollDetailQuery = (
     & Pick<Poll, 'id' | 'slug' | 'isNew' | 'isActive' | 'title'>
     & { options: Array<(
       { __typename?: 'PollOption' }
-      & Pick<PollOption, 'id' | 'title' | 'order'>
+      & Pick<PollOption, 'id' | 'title' | 'index'>
     )> }
   ) }
 );
@@ -160,6 +186,7 @@ export const CreateOptionDocument = gql`
     mutation CreateOption($pollId: ID!) {
   option: createPollOption(pollId: $pollId) {
     id
+    index
     poll {
       id
       options {
@@ -227,6 +254,43 @@ export function useCreatePollMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreatePollMutationHookResult = ReturnType<typeof useCreatePollMutation>;
 export type CreatePollMutationResult = ApolloReactCommon.MutationResult<CreatePollMutation>;
 export type CreatePollMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePollMutation, CreatePollMutationVariables>;
+export const UpdatePollOptionOrdersDocument = gql`
+    mutation UpdatePollOptionOrders($id: ID!, $options: [ID!]!) {
+  poll: updatePollOptionOrders(id: $id, options: $options) {
+    id
+    options {
+      id
+      index
+    }
+  }
+}
+    `;
+export type UpdatePollOptionOrdersMutationFn = ApolloReactCommon.MutationFunction<UpdatePollOptionOrdersMutation, UpdatePollOptionOrdersMutationVariables>;
+
+/**
+ * __useUpdatePollOptionOrdersMutation__
+ *
+ * To run a mutation, you first call `useUpdatePollOptionOrdersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePollOptionOrdersMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePollOptionOrdersMutation, { data, loading, error }] = useUpdatePollOptionOrdersMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useUpdatePollOptionOrdersMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePollOptionOrdersMutation, UpdatePollOptionOrdersMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdatePollOptionOrdersMutation, UpdatePollOptionOrdersMutationVariables>(UpdatePollOptionOrdersDocument, baseOptions);
+      }
+export type UpdatePollOptionOrdersMutationHookResult = ReturnType<typeof useUpdatePollOptionOrdersMutation>;
+export type UpdatePollOptionOrdersMutationResult = ApolloReactCommon.MutationResult<UpdatePollOptionOrdersMutation>;
+export type UpdatePollOptionOrdersMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePollOptionOrdersMutation, UpdatePollOptionOrdersMutationVariables>;
 export const UpdatePollOptionTitleDocument = gql`
     mutation UpdatePollOptionTitle($id: ID!, $title: String!) {
   option: updatePollOption(id: $id, title: $title) {
@@ -306,7 +370,7 @@ export const PollDetailDocument = gql`
     options {
       id
       title
-      order
+      index
     }
   }
 }

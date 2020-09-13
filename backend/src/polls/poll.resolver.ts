@@ -14,6 +14,7 @@ import { PollOptionsService } from 'src/pollOptions/pollOptions.service';
 import { Poll } from './poll.entity';
 import { PollsService } from './polls.service';
 import { UpdatePollArgs } from './args.entity';
+import { orderBy } from 'lodash';
 
 @Resolver(() => Poll)
 export class PollResolver {
@@ -24,11 +25,12 @@ export class PollResolver {
 
   @ResolveField(() => Poll)
   async options(@Parent() parent: Poll) {
-    return (
+    const options =
       parent.options ||
       (await this.pollOptionsService.findForPoll(parent.id)) ||
-      []
-    );
+      [];
+
+    return orderBy(options, (x) => x.index);
   }
 
   @Query((returns) => Poll)
@@ -52,5 +54,13 @@ export class PollResolver {
     @Args() args: UpdatePollArgs,
   ) {
     return this.pollService.update(id, args);
+  }
+
+  @Mutation((returns) => Poll)
+  async updatePollOptionOrders(
+    @Args({ name: 'id', type: () => ID }) id: string,
+    @Args({ name: 'options', type: () => [ID] }) options: string[],
+  ) {
+    return this.pollService.updateOptionsOrder(id, options);
   }
 }

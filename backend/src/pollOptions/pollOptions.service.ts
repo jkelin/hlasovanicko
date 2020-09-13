@@ -29,7 +29,7 @@ export class PollOptionsService {
     const option = new PollOption();
     option.id = v4();
     option.poll = poll;
-    option.order = poll.options.length;
+    option.index = poll.options.length;
 
     await this.connection.transaction(async (manager) => {
       await manager.save(poll);
@@ -66,8 +66,8 @@ export class PollOptionsService {
         option.title = update.title;
       }
 
-      if (update.order !== undefined) {
-        option.order = update.order;
+      if (update.index !== undefined) {
+        option.index = update.index;
       }
 
       await manager.save(option);
@@ -79,6 +79,7 @@ export class PollOptionsService {
   async findForPoll(pollId: string) {
     return this.optionRepository.find({
       where: { poll: { id: pollId } },
+      order: { index: 'ASC' },
     });
   }
 }

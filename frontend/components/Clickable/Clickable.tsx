@@ -7,6 +7,7 @@ import React, {
   MouseEventHandler,
   CSSProperties,
 } from 'react'
+import Spinner from 'svg/spinner-bars.svg'
 
 export interface ClickableProps {
   /**
@@ -137,7 +138,7 @@ export const Clickable: React.FC<Props> = (props) => {
         title={props.title}
         data-cy-id={props['data-cy-id']}
       >
-        {loading ? 'Loading' : props.children}
+        {loading ? <Spinner height={26} width={26} /> : props.children}
       </button>
     )
   }

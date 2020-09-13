@@ -3,7 +3,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.enableCors();
+  app.enableCors({
+    maxAge: 3600,
+    methods: 'POST',
+  });
   await app.listen(3001);
 }
 bootstrap();

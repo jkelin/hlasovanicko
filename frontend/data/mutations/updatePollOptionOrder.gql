@@ -1,0 +1,9 @@
+mutation UpdatePollOptionOrders($id: ID!, $options: [ID!]!) {
+  poll: updatePollOptionOrders(id: $id, options: $options) {
+    id
+    options {
+      id
+      index
+    }
+  }
+}

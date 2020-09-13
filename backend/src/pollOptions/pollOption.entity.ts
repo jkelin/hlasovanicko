@@ -28,5 +28,5 @@ export class PollOption {
 
   @Column({ default: 0 })
   @Field(() => Int)
-  order: number;
+  index: number;
 }

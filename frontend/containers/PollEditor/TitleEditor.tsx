@@ -57,7 +57,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = (props) => {
           autoComplete="no off"
           className="flex-grow"
           ref={register()}
-          autoFocus={true}
+          autoFocus={!props.poll.title}
         />
         {(formState.isDirty || formState.isSubmitting) && (
           <Button

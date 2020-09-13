@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators
 import { Connection, Repository } from 'typeorm';
 import humanId from 'human-id';
 import { PollOption } from 'src/pollOptions/pollOption.entity';
+import { orderBy } from 'lodash';
 
 @Injectable()
 export class PollsService {
@@ -54,6 +55,28 @@ export class PollsService {
       }
 
       await manager.save(poll);
+    });
+
+    return poll;
+  }
+
+  async updateOptionsOrder(pollId: string, options: string[]) {
+    const poll = await this.pollRepository.findOne({
+      where: { id: pollId },
+      relations: ['options'],
+    });
+
+    if (!poll) {
+      return new Error('Poll not found');
+    }
+
+    await this.connection.transaction(async (manager) => {
+      options.forEach((id, i) => {
+        const option = poll.options.find((x) => x.id === id);
+        option.index = i;
+      });
+
+      await manager.save(poll.options);
     });
 
     return poll;

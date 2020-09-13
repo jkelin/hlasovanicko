@@ -1,6 +1,7 @@
 mutation CreateOption($pollId: ID!) {
   option: createPollOption(pollId: $pollId) {
     id
+    index
     poll {
       id
       options {

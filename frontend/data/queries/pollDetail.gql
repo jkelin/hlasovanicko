@@ -9,7 +9,7 @@ query PollDetail($slug: ID!) {
     options {
       id
       title
-      order
+      index
     }
   }
 }
